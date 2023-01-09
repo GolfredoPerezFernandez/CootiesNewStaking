@@ -60,7 +60,7 @@ return
   const handleChange =async (event: React.ChangeEvent<HTMLInputElement>) => {
  
     setNetwork(event.target.value)
-    if(isWeb3Enabled){
+    if(isWeb3Enabled&&isAuthenticated){
     if(event.target.value==='Songbird') {
 
       await Moralis.switchNetwork('0x13')
