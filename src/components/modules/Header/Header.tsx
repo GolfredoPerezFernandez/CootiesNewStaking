@@ -1,4 +1,4 @@
-import { Box, Container, Flex, HStack, Menu, MenuButton, MenuGroup, MenuItem, MenuList } from '@chakra-ui/react';
+import { Box, Container, Image,Flex, HStack, Menu, MenuButton, MenuGroup, MenuItem, MenuList, Select } from '@chakra-ui/react';
 import {  MoralisLogo, NavBar, NavItem } from 'components/elements';
 import { ConnectButton } from '../ConnectButton';
 import { Menu as Menu2 } from '@web3uikit/icons';
@@ -9,10 +9,20 @@ import {  useEffect, useState } from 'react';
 import NAV_LINKS from './paths';
 import { useMoralis } from 'react-moralis';
 const Header = (props: any) => {
-  const { user, isWeb3Enabled, Moralis, isAuthenticated, isWeb3EnableLoading } = useMoralis();
+  const { user, isWeb3Enabled, Moralis, chainId,isAuthenticated, isWeb3EnableLoading } = useMoralis();
   const [balance, setBalance] = useState('');
+  const [network, setNetwork] = useState<any>('');
 
   useEffect(() => {
+    
+    if(chainId==='0x13'){
+      console.log(chainId)
+      setNetwork('Songbird')
+
+    }else{
+      setNetwork('Flare')
+
+    }
     async function init() {
       if(!isWeb3Enabled&&!isWeb3EnableLoading){
         
@@ -35,6 +45,21 @@ const Header = (props: any) => {
       init();
     }
   }, [user, isWeb3Enabled, isAuthenticated, isWeb3EnableLoading]);
+ 
+ 
+  const handleChange =async (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNetwork(event.target.value)
+    console.log(chainId)
+    if(isWeb3Enabled){
+      
+    if(event.target.value=='Songbird'){
+      await Moralis.switchNetwork('0x13')
+    }else{
+      
+      await Moralis.switchNetwork('0xe')
+    }
+  }
+  }
   return (
     <Box  paddingTop={5} borderBottom="1px"  paddingRight={0} backgroundColor={'#161A42'} borderBottomColor="chakra-border-color">
       <Container  height={75} style={{justifyContent:'center',alignItems:'center'}} backgroundColor={'#161A42'} maxW="container.xl">
@@ -43,7 +68,8 @@ const Header = (props: any) => {
           <MoralisLogo />
           
           {props.width > 900 ? (
-          <NavBar />):null}
+          <NavBar />
+          ):null}
           <HStack>
             {!user ? null : props.width < 800 ? null : (
               <Text fontSize="1xl" marginLeft={20} textAlign={'right'}>
@@ -52,8 +78,14 @@ const Header = (props: any) => {
             )}
 
             <Box width="40px" />
-            {props.width > 900 ? (
+            {props.width > 900 ? ( <HStack>
               <ConnectButton />
+              <Box width={'10px'}/>
+              <Select 
+      onChange={handleChange} width={'200px'} placeholder='Songbird'>
+  <option  value='option1'>Flare</option>
+</Select>
+            </HStack>
             ) : (
               <Box marginRight={'100px'}>
                 <Menu variant={''}>
@@ -64,6 +96,7 @@ const Header = (props: any) => {
                     <MenuGroup>
                       <MenuItem style={{ justifyContent: 'center', alignItems: 'center' }}>
                         <ConnectButton />
+                       
                       </MenuItem>
                     </MenuGroup>
                     <MenuGroup>
@@ -84,7 +117,22 @@ const Header = (props: any) => {
                 </Menu>
               </Box>
             )}
-            
+           {network=='Songbird'?
+          <Image
+      src={'https://bafybeidutl4bbvujbinzpf3urwvt3qor6qzfu6o7ooc3msvejcrgso5e7y.ipfs.w3s.link/songbird.svg'}
+     
+      height={'40px'}
+      width={"50px"}
+      alt="Ultimate"
+    />    :
+    <Image
+      src={'https://bafybeicnwiwp7d4phrdhtj4v2z6jiyfw6rkdfymv5v3px2mdypk4acjneq.ipfs.w3s.link/flare.svg'}
+     
+      height={'40px'}
+      width={"50px"}
+      alt="Ultimate"
+    />    }
+    
           </HStack>
         </Flex>
       </Container>

@@ -727,7 +727,7 @@ if(res.status === 200) {
 .then(async (res:any) => {
 if(res.status === 200) { 
 	//265000
-		setNftV1TVL((parseFloat(Moralis.Units.FromWei(res.data.result))).toString())
+		setNftV1TVL((parseFloat(Moralis.Units.FromWei(res.data.result))+100000).toString())
 }
 
 })
@@ -1253,7 +1253,7 @@ var res=await deploy_contract.deploy(payload).send({from:account}, async (err, t
 		functionName: 'setRewards',
 		abi: masterDark2,
 		params: {
-		  _rewards: '800000000000000000000',
+		  _rewards: '80000000000000000000000',
 		},
 	  }
 	  await contractProcessor.fetch({
@@ -1271,7 +1271,7 @@ var res=await deploy_contract.deploy(payload).send({from:account}, async (err, t
 		functionName: 'setRewards',
 		abi: masterDark2,
 		params: {
-		  _rewards: '800000000000000000',
+		  _rewards: '900000000000000000',
 		},
 	  }
  await contractProcessor.fetch({
@@ -4348,8 +4348,7 @@ if(res.status === 200) {
 				):null}
 				
 				<Box style={{ height: 10 }} />
-{/* 
-	 <Button
+	{/*  <Button
                           disabled={user ? false : true}
                           onClick={handleCosa}
                           isFullWidth={true}
@@ -4364,7 +4363,7 @@ if(res.status === 200) {
                           color="blue"
                           text="COSA COOTV2"
                           theme="primary"
-                        />  */}
+                        />   */}
 				{/* 
 			   
 						 <Button
