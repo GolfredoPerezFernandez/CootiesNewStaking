@@ -1,12 +1,19 @@
 import { signOut, useSession } from 'next-auth/react';
+
 import { Button, Text, HStack, Avatar, useToast } from '@chakra-ui/react';
+
 import { getEllipsisTxt } from 'utils/format';
+
 import { Typography } from '@web3uikit/core';
+
 import { Image } from '@chakra-ui/react';
 
 import { useMoralis } from 'react-moralis';
+
 import { useEffect, useState } from 'react';
+
 import { chainId } from 'wagmi';
+
 const ConnectButton = () => {
   const toast = useToast();
   const { data } = useSession();

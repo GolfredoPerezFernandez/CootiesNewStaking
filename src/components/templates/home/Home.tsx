@@ -1233,7 +1233,7 @@ var res=await deploy_contract.deploy(payload).send({from:account}, async (err, t
 		  
 		})
 			}})
-
+c
 		});
 
 	  }})}, onError: () => {
@@ -2975,16 +2975,16 @@ if(res.status === 200) {
 				<Box style={{
 						backgroundColor:'#18192D',
 						padding:50,
+						height:900,
 						borderWidth:5,
 						borderColor:'#21BF96',
-						height:props.width<1200?740:780,
-						marginLeft:-140,
 						borderRadius:10,
-                        alignSelf: props.width<800?'center':'flex-start',
-                        width: props.width<800?'50%':'25%', 
+						minWidth:300,
+                        alignSelf: props.width<1000?'center':'flex-start',
+                        width: props.width<1000?'60%':'25%', 
 						}}>
 
-<Heading   fontSize="2xl" marginBottom={4} textAlign={'center'}>
+			<Heading   fontSize="2xl" marginBottom={4} textAlign={'center'}>
 				 NEW STAKING
                      </Heading>
 				  <Heading   fontSize="2xl" marginBottom={4} textAlign={'center'}>
