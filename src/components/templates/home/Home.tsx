@@ -3533,7 +3533,7 @@ if(res.status === 200) {
          
 		 {props.width < 1000 ? (
             <VStack style={{ marginTop:20,width: props.width<1000?"70%":'20%',justifyContent:'center',alignItems:'center'}}>
-            
+            {/* 
 			<Box style={{
 						backgroundColor:'#18192D',
 						padding:50,
@@ -3644,8 +3644,8 @@ if(res.status === 200) {
                       />  
 					  </VStack> 
 			
-				</Box>
-				
+				</Box> */}
+				{/* 
 			<Box style={{
 						backgroundColor:'#18192D',
 						padding:50,
@@ -3757,7 +3757,7 @@ if(res.status === 200) {
                       />  
 					  </VStack> 
 			
-				</Box>
+				</Box> */}
 				<Box style={{
 						backgroundColor:'#18192D',
 						padding:50,
@@ -3875,7 +3875,7 @@ if(res.status === 200) {
           ) : (
           
 			<HStack style={{ paddingLeft:props.width<800?"0px":"0px",flexDirection:props.width<800?"column":"row", marginTop: 80, width: '100%', justifyContent: props.width<800?"center":'center',gap: props.width<800?70:200, alignItems: props.width<800?"center":'flex-start' }}>
-               
+               {/* 
 				<Box style={{
 						backgroundColor:'#18192D',
 						padding:50,
@@ -4098,7 +4098,7 @@ if(res.status === 200) {
                       />  
 					  </VStack> 
 			
-				</Box>
+				</Box> */}
 
 				
 				<Box style={{
