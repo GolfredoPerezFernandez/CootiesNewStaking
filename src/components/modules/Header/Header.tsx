@@ -11,23 +11,33 @@ import { useMoralis } from 'react-moralis';
 const Header = (props: any) => {
   const { user, isWeb3Enabled, Moralis, chainId,isAuthenticated, isWeb3EnableLoading } = useMoralis();
   const [balance, setBalance] = useState('');
-  const [network, setNetwork] = useState<any>('');
+  const [network, setNetwork] = useState<any>('Flare Mainnet');
 
   useEffect(() => {
-    
     if(chainId==='0x13'){
       console.log(chainId)
       setNetwork('Songbird')
 
-    }else{
-      setNetwork('Flare')
-
+    } else if(chainId==='0xe'){
+      setNetwork('Flare Mainnet')
     }
+
+      },[chainId])
+
+  useEffect(() => {
     async function init() {
       if(!isWeb3Enabled&&!isWeb3EnableLoading){
         
       await Moralis.enableWeb3()
       return
+    }
+    if(chainId==='0x13'){
+      console.log(chainId)
+      setNetwork('Songbird')
+
+    } else if(chainId==='0xe'){
+      setNetwork('Flare Mainnet')
+return 
     }
       const sendOptionsSymbol3 = {
         contractAddress:'0xe4671844Fcb3cA9A80A1224B6f9A0A6c2Ba2a7d5',
@@ -44,19 +54,21 @@ const Header = (props: any) => {
     if (isWeb3Enabled && isAuthenticated && !isWeb3EnableLoading && user) {
       init();
     }
-  }, [user, isWeb3Enabled, isAuthenticated, isWeb3EnableLoading]);
+  }, [user, isWeb3Enabled, isAuthenticated, isWeb3EnableLoading,network,chainId]);
  
  
   const handleChange =async (event: React.ChangeEvent<HTMLInputElement>) => {
+ 
     setNetwork(event.target.value)
-    console.log(chainId)
     if(isWeb3Enabled){
-      
-    if(event.target.value=='Songbird'){
+    if(event.target.value==='Songbird') {
+
       await Moralis.switchNetwork('0x13')
-    }else{
+
+    } else if(event.target.value==='Flare Mainnet') {
       
       await Moralis.switchNetwork('0xe')
+
     }
   }
   }
@@ -80,10 +92,13 @@ const Header = (props: any) => {
             <Box width="40px" />
             {props.width > 900 ? ( <HStack>
               <ConnectButton />
-              <Box width={'10px'}/>
+              <Box width={'20px'}/>
               <Select 
-      onChange={handleChange} width={'200px'} placeholder='Songbird'>
-  <option  value='option1'>Flare</option>
+      onChange={handleChange} width={'200px'} placeholder={network}>
+ {network!=='Flare Mainnet'?<option  value='Flare Mainnet'>Flare Mainnet</option>:null} 
+ 
+ {network!=='Songbird'?<option  value='Songbird'>Songbird</option>:null} 
+  
 </Select>
             </HStack>
             ) : (
@@ -117,6 +132,7 @@ const Header = (props: any) => {
                 </Menu>
               </Box>
             )}
+            <Box width={'10px'}/>
            {network=='Songbird'?
           <Image
       src={'https://bafybeidutl4bbvujbinzpf3urwvt3qor6qzfu6o7ooc3msvejcrgso5e7y.ipfs.w3s.link/songbird.svg'}
