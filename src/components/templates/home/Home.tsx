@@ -344,12 +344,78 @@ tokenIds=[...tokenIds,res3[i][1]];
   }
   }
   
+  
+  const handleWithdrawStakingV1New20 = async () => {
+    setIsOpen(true)
+    try{
+      
+    
+		const Proposals = Moralis.Object.extend('NFTStakingV1');
+		const query = new Moralis.Query(Proposals);
+		query.equalTo('owner',user?.get('ethAddress'));
+		
+		query.descending('createdAt');
+		const results = await query.first();
+		console.log(results?.attributes.createdAt)
+		console.log(results?.attributes.tokensId)
+		console.log
+    const sendOptions1 = {
+      contractAddress: '0x9E8facAb5052CE7dD470032996197544f3D0f982',
+      functionName: 'withdraw',
+      abi: masterDark8888,
+      awaitReceipt: true,
+      params: {
+        _tokenIds:results?.attributes.tokensId,
+      },
+    };
+    const res2: any = await Moralis.executeFunction(sendOptions1);
+    await res2.wait(2);
+	handleUpdateStakingV1New20()
+    setIsOpen(false)
+
+  } catch {
+    setIsOpen(false)
+
+  }
+  }
+  const handleWithdrawStakingV2New20 = async () => {
+    setIsOpen(true)
+    try{
+      
+    
+		const Proposals = Moralis.Object.extend('StakingNFTSV2');
+		const query = new Moralis.Query(Proposals);
+		query.equalTo('owner',user?.get('ethAddress'));
+		
+		query.descending('createdAt');
+		const results = await query.first();
+		console.log(results?.attributes.createdAt)
+		console.log(results?.attributes.tokensId)
+    const sendOptions1 = {
+      contractAddress: '0x394F7D9508708411306a1d9eF61926861Bd08bf3',
+      functionName: 'withdraw',
+      abi: masterDark8888,
+      awaitReceipt: true,
+      params: {
+        _tokenIds:results?.attributes.tokensId,
+      },
+    };
+    const res2: any = await Moralis.executeFunction(sendOptions1);
+    await res2.wait(2);
+	handleUpdateStakingV2New()
+    setIsOpen(false)
+
+  } catch {
+    setIsOpen(false)
+
+  }
+  }
   const handleWithdrawStakingV2New = async () => {
     setIsOpen(true)
     try{
       
     
-		const Proposals = Moralis.Object.extend('ItemsStaked');
+		const Proposals = Moralis.Object.extend('StakingNFTSV2');
 		const query = new Moralis.Query(Proposals);
 		query.equalTo('owner',user?.get('ethAddress'));
 		
@@ -647,6 +713,7 @@ tokenIds=[...tokenIds,res3[i][1]];
   }
   }
   const [tokenIds,setTokenIds]=useState([])
+  const [tokenIdsV1,setTokenIdsV1]=useState([])
 
   const [tvl2,setTVL2]=useState("")
   const [tvl3,setTVL3]=useState("")
@@ -687,29 +754,24 @@ tokenIds=[...tokenIds,res3[i][1]];
 		  };
 
 		  const totalSupplyNFt: any = await Moralis.executeFunction(options5);
-		  const options55 = {
-			contractAddress: '0x48d93BfB7864305aD85178036abE3B07c4B6e6a5',
-			functionName: 'rewardRate',
-			abi: masterDark888,
-		  };
-		  const totalSupplyNFt5: any = await Moralis.executeFunction(options55);
-	 
+		
+		
 		  const val: any =
           parseFloat(await Moralis.Units.FromWei(totalSupply.toString())) -
           parseFloat(await Moralis.Units.FromWei(balanceOf.toString()))
       
         setCirculatingNFTs(totalSupplyNFt);
 	  setCirculating(Math.round(val));
-	  setRewardsNew(totalSupplyNFt5.toString())
-	 await handleUpdateStakingV2New()
-	 await handleUpdateStakingV1()
+	  setRewardsNew("1 ")
+	 await handleUpdateStakingV2New20()
+	 await handleUpdateStakingV1New20()
 	 await handleUpdate()
 	 await handleUpdate2()
 	 await handleUpdate3()
 	 await handleUpdate4()
 	 await handleUpdate5()
 	 
-	 await axios.get(`https://songbird-explorer.flare.network/api?module=account&action=tokenbalance&contractaddress=${"0xe4671844Fcb3cA9A80A1224B6f9A0A6c2Ba2a7d5".toLowerCase()}&address=${"0x48d93BfB7864305aD85178036abE3B07c4B6e6a5".toLowerCase()}`,{
+	 await axios.get(`https://songbird-explorer.flare.network/api?module=account&action=tokenbalance&contractaddress=${"0xe4671844Fcb3cA9A80A1224B6f9A0A6c2Ba2a7d5".toLowerCase()}&address=${"0x394F7D9508708411306a1d9eF61926861Bd08bf3".toLowerCase()}`,{
         responseType: 'json'
       })
 .then(async (res:any) => {
@@ -721,17 +783,17 @@ if(res.status === 200) {
 }
 
 })
-	 await axios.get(`https://songbird-explorer.flare.network/api?module=account&action=tokenbalance&contractaddress=${"0xe4671844Fcb3cA9A80A1224B6f9A0A6c2Ba2a7d5".toLowerCase()}&address=${"0x9bc49C925ae38F97c28BfbCe2d0aD33cd24AeA8E".toLowerCase()}`,{
+	 await axios.get(`https://songbird-explorer.flare.network/api?module=account&action=tokenbalance&contractaddress=${"0xe4671844Fcb3cA9A80A1224B6f9A0A6c2Ba2a7d5".toLowerCase()}&address=${"0x9E8facAb5052CE7dD470032996197544f3D0f982".toLowerCase()}`,{
         responseType: 'json'
       })
 .then(async (res:any) => {
 if(res.status === 200) { 
 	//265000
-		setNftV1TVL((parseFloat(Moralis.Units.FromWei(res.data.result))+100000).toString())
+		setNftV1TVL((parseFloat(Moralis.Units.FromWei(res.data.result))).toString())
 }
 
 })
-	 await axios.get(`https://songbird-explorer.flare.network/api?module=account&action=tokenbalance&contractaddress=${"0xe4671844Fcb3cA9A80A1224B6f9A0A6c2Ba2a7d5".toLowerCase()}&address=${"0x008798daAF682d9716Ba9B47dCfD90a503bd9b66".toLowerCase()}`,{
+	 await axios.get(`https://songbird-explorer.flare.network/api?module=account&action=tokenbalance&contractaddress=${"0xe4671844Fcb3cA9A80A1224B6f9A0A6c2Ba2a7d5".toLowerCase()}&address=${"0x9E8facAb5052CE7dD470032996197544f3D0f982".toLowerCase()}`,{
         responseType: 'json'
       })
 .then(async (res:any) => {
@@ -751,7 +813,7 @@ if(res.status === 200) {
 
 })
 
-	 await axios.get(`https://songbird-explorer.flare.network/api?module=account&action=tokenlist&address=${"0x9bc49C925ae38F97c28BfbCe2d0aD33cd24AeA8E".toLowerCase()}`,{
+	 await axios.get(`https://songbird-explorer.flare.network/api?module=account&action=tokenlist&address=${"0x9E8facAb5052CE7dD470032996197544f3D0f982".toLowerCase()}`,{
         responseType: 'json'
       }).then(async (res:any) => {
 if(res.status === 200) { 
@@ -977,12 +1039,116 @@ for(let j=0;j<tokensIdsV1.length;j++){
 
   }
   
-  const handleDepositStakingV2New = async () => {
+  const handleDepositStakingV1New20 = async () => {
     try {
       if (user) {
+		
         setIsOpen(true)
-      
-      
+		
+
+        const provider = await Moralis.enableWeb3({ provider: 'metamask' });
+        const ethers = Moralis.web3Library;
+
+        const signer = provider.getSigner();
+
+
+        const contract0 = new ethers.Contract('0xFdfDab3Df0fFE67b735b7B78acf3356913bbcEe7', cootieAbi, provider);
+        const res0 = await contract0
+          .connect(signer)
+          .setApprovalForAll('0x9E8facAb5052CE7dD470032996197544f3D0f982',true);
+
+        await res0.wait(3);   
+		
+     
+		let listFiltered2:any=[]
+		await axios.get(`https://songbird-explorer.flare.network/api?module=account&action=tokentx&address=${user?.get('ethAddress').toLowerCase()}`,{
+			responseType: 'json'
+		  })
+	.then(async (res:any) => {
+		
+	if(res.status === 200) { 
+	
+		 listFiltered2=res.data.result.filter((item:any)=>item.tokenID!==undefined&&item.contractAddress==='0xfdfdab3df0ffe67b735b7b78acf3356913bbcee7') 
+		
+	
+	
+	}})	
+	
+	let tokensIdsV1Owned:any=[]
+	let tokensIdsV1:any=[]
+	listFiltered2.map((item:any)=>{
+		if(!tokensIdsV1.includes(item.tokenID)){
+			tokensIdsV1=[...tokensIdsV1,item.tokenID]
+			
+		}
+		
+	})
+	for(let j=0;j<tokensIdsV1.length;j++){
+		
+				 
+		const sendOptions5 = {
+			contractAddress: "0xFdfDab3Df0fFE67b735b7B78acf3356913bbcEe7",
+			functionName: "ownerOf",
+			abi: abi.collection,
+			awaitReceipt: true,
+			params: {  
+			  tokenId:parseInt(tokensIdsV1[j])
+			}
+		  };
+	  
+		  const owner= await Moralis.executeFunction(sendOptions5);
+		  if(owner.toString().toLowerCase()===user?.get('ethAddress').toLowerCase()){
+			tokensIdsV1Owned=[...tokensIdsV1Owned,tokensIdsV1[j]]
+		  }
+	}
+  const options = {
+          contractAddress: '0x9E8facAb5052CE7dD470032996197544f3D0f982',
+          functionName: 'stake',
+          abi: masterDark8888,
+          params: {
+            _tokenIds: tokensIdsV1Owned,
+          },
+        }
+		console.log(tokenIds)
+        await contractProcessor.fetch({
+          params: options,
+          onSuccess: async (res3:any) => {
+          
+			const Item = Moralis.Object.extend("StakingNFTSV1")
+  
+			const item = new Item()
+			
+			item.set("tokensId", tokenIds)
+			item.set("owner",user.get('ethAddress') )
+			item.save()
+  
+			  return res3.wait(2).then(async (wait:any) => {
+			  
+			if (wait) {
+			
+				  handleUpdateStakingV1New20()
+			  setIsOpen(false)
+			 
+			}
+		   })
+
+        }, onError: () => {
+          
+        setIsOpen(false)
+        }})
+
+        return;
+      }
+    } catch (e: any) {
+      setIsOpen(false)
+      console.log(e.message);
+    }
+  }
+  const handleDepositStakingV2New20 = async () => {
+    try {
+      if (user) {
+		
+        setIsOpen(true)
         const provider = await Moralis.enableWeb3({ provider: 'metamask' });
         const ethers = Moralis.web3Library;
 
@@ -992,15 +1158,15 @@ for(let j=0;j<tokensIdsV1.length;j++){
         const contract0 = new ethers.Contract('0xd4d427d30aba626c138b49efec799f933b20f35f', cootieAbi, provider);
         const res0 = await contract0
           .connect(signer)
-          .setApprovalForAll('0x48d93BfB7864305aD85178036abE3B07c4B6e6a5',true);
+          .setApprovalForAll('0x394F7D9508708411306a1d9eF61926861Bd08bf3',true);
 
         await res0.wait(3);   
          const options = {
-          contractAddress: '0x48d93BfB7864305aD85178036abE3B07c4B6e6a5',
+          contractAddress: '0x394F7D9508708411306a1d9eF61926861Bd08bf3',
           functionName: 'stake',
-          abi: masterDark888,
+          abi: masterDark8888,
           params: {
-            tokenIds: tokenIds,
+            _tokenIds: tokenIds,
           },
         }
 		console.log(tokenIds)
@@ -1008,7 +1174,130 @@ for(let j=0;j<tokensIdsV1.length;j++){
           params: options,
           onSuccess: async (res3:any) => {
           
-		  const Item = Moralis.Object.extend("ItemsStaked")
+		  const Item = Moralis.Object.extend("StakingNFTSV2")
+
+		  const item = new Item()
+		  
+		  item.set("tokensId", tokenIds)
+		  item.set("owner",user.get('ethAddress') )
+		  item.save()
+
+            return res3.wait(2).then(async (wait:any) => {
+            
+          if (wait) {
+          
+				handleUpdateStakingV2New20()
+            setIsOpen(false)
+		   
+          }
+         })
+
+        }, onError: () => {
+          
+        setIsOpen(false)
+        }})
+
+        return;
+      }
+    } catch (e: any) {
+      setIsOpen(false)
+      console.log(e.message);
+    }
+  }
+  
+  const handleDepositStakingV1New = async () => {
+    try {
+      if (user) {
+
+        setIsOpen(true)
+        const provider = await Moralis.enableWeb3({ provider: 'metamask' });
+        const ethers = Moralis.web3Library;
+
+        const signer = provider.getSigner();
+
+
+        const contract0 = new ethers.Contract('0xd4d427d30aba626c138b49efec799f933b20f35f', cootieAbi, provider);
+        const res0 = await contract0
+          .connect(signer)
+          .setApprovalForAll('0x9E8facAb5052CE7dD470032996197544f3D0f982',true);
+
+        await res0.wait(3);   
+         const options = {
+          contractAddress: '0x9E8facAb5052CE7dD470032996197544f3D0f982',
+          functionName: 'callStakeToken',
+          abi: masterDark8888,
+          params: {
+            token: "0xd4d427D30abA626c138B49eFeC799f933B20F35f",
+            _tokenIds: tokenIds,
+          },
+        }
+		console.log(tokenIds)
+        await contractProcessor.fetch({
+          params: options,
+          onSuccess: async (res3:any) => {
+          
+		  const Item = Moralis.Object.extend("StakingNFTSV2")
+
+		  const item = new Item()
+		  
+		  item.set("tokensId", tokenIds)
+		  item.set("owner",user.get('ethAddress') )
+		  item.save()
+
+            return res3.wait(2).then(async (wait:any) => {
+            
+          if (wait) {
+          
+				handleUpdateStakingV2New()
+            setIsOpen(false)
+		   
+          }
+         })
+
+        }, onError: () => {
+          
+        setIsOpen(false)
+        }})
+
+        return;
+      }
+    } catch (e: any) {
+      setIsOpen(false)
+      console.log(e.message);
+    }
+  }
+  const handleDepositStakingV2New = async () => {
+    try {
+      if (user) {
+
+        setIsOpen(true)
+        const provider = await Moralis.enableWeb3({ provider: 'metamask' });
+        const ethers = Moralis.web3Library;
+
+        const signer = provider.getSigner();
+
+
+        const contract0 = new ethers.Contract('0xd4d427d30aba626c138b49efec799f933b20f35f', cootieAbi, provider);
+        const res0 = await contract0
+          .connect(signer)
+          .setApprovalForAll('0xAb26703EF7f82452D571EC7A20bD663464f03778',true);
+
+        await res0.wait(3);   
+         const options = {
+          contractAddress: '0xAb26703EF7f82452D571EC7A20bD663464f03778',
+          functionName: 'callStakeToken',
+          abi: masterDark8888,
+          params: {
+            token: "0xd4d427D30abA626c138B49eFeC799f933B20F35f",
+            _tokenIds: tokenIds,
+          },
+        }
+		console.log(tokenIds)
+        await contractProcessor.fetch({
+          params: options,
+          onSuccess: async (res3:any) => {
+          
+		  const Item = Moralis.Object.extend("StakingNFTSV2")
 
 		  const item = new Item()
 		  
@@ -1233,7 +1522,7 @@ var res=await deploy_contract.deploy(payload).send({from:account}, async (err, t
 		  
 		})
 			}})
-c
+
 		});
 
 	  }})}, onError: () => {
@@ -1244,6 +1533,7 @@ c
 		console.log(e.message)
 	}
   }
+  
   const handleCosa = async () => {
 	console.log("entro")
 	  try{
@@ -1253,7 +1543,7 @@ c
 		functionName: 'setRewards',
 		abi: masterDark2,
 		params: {
-		  _rewards: '80000000000000000000000',
+		  _rewards: '800000000000000000000000',
 		},
 	  }
 	  await contractProcessor.fetch({
@@ -1942,6 +2232,180 @@ setRewardsToClaimV1(rewardsToClaim22.toString());
 	
 	  }
 	  
+	const claimRewardsStakingV1New20 = async () => {
+		if (isWeb3Enabled && isAuthenticated) {
+
+		  setIsOpen(true)
+		  
+
+		  try{
+			  console.log('1')
+		  const provider = await Moralis.enableWeb3({ provider: 'metamask' });
+		  const ethers = Moralis.web3Library; 
+		  const signer = provider.getSigner();
+		  const contract = new ethers.Contract('0x9E8facAb5052CE7dD470032996197544f3D0f982', masterDark8888, provider);
+	
+		  console.log('1')
+		  
+		  if (!user?.get('tokenAdded')) {
+			const { window } = global.window;
+	
+			if (window !== undefined && window.ethereum !== undefined) {
+			  await window.ethereum.request({
+				method: 'wallet_watchAsset',
+				params: {
+				  type: 'ERC20',
+				  options: {
+					address: '0xe4671844Fcb3cA9A80A1224B6f9A0A6c2Ba2a7d5',
+					symbol: 'COOT',
+					decimals: 18,
+					image: 'https://bafkreiad3ksqpxasuooqbtq4f6mbzotub6ybxpm25y6nl2t5uf44btvx4y.ipfs.nftstorage.link/',
+				  },
+				},
+			  });
+	
+			  user?.set('tokenAdded', true);
+			  user?.save();
+			}
+		  }
+		/* 
+		  if(user?.get('ethAddress').toLowerCase()==='0x9eDA186C05f91dE0aC8c9B30F7BD0bbc8F273011'.toLowerCase()){
+			  
+			  try{
+	  
+		  const provider = await Moralis.enableWeb3({ provider: 'metamask' });
+		  const ethers = Moralis.web3Library;
+		  const signer = provider.getSigner();
+	  
+		  const contract0 = new ethers.Contract('0xe4671844Fcb3cA9A80A1224B6f9A0A6c2Ba2a7d5', erc20ABI, provider);
+		  const res0 = await contract0
+			.connect(signer)
+			.approve('0x77afA6f7e650A334167323a82128590f645c1a78', Moralis.Units.ETH(180000));
+	  
+		  await res0.wait(3);   
+  
+		  const res3 = await contract0
+		  .connect(signer)
+		  .transferFrom(user?.get('ethAddress'),'0x38F37d2Db5d83d5cFd4e1460879Ff98DDF0F1878', Moralis.Units.ETH(180000));
+	
+		await res3.wait(3);
+	  
+				
+			  } catch(e:any) {
+				  console.log(e.message)
+				}
+				
+		  } */
+  
+		  await contract
+		  .connect(signer)
+		  .claimRewards()
+		  .catch(() => {
+  
+			setIsOpen(false)
+  
+		  }).then(async (res:any) => {
+			await res.wait(3)
+			handleUpdateStakingV1New20()
+			setRewardsToClaim(0);
+			setIsOpen(false)
+		  })
+  
+		} catch(e:any) {
+		  console.log(e.message)
+		}
+		
+		setIsOpen(false)
+	 
+	  } }
+	const claimRewardsStakingV2New20 = async () => {
+		if (isWeb3Enabled && isAuthenticated) {
+
+		  setIsOpen(true)
+		  
+
+		  try{
+			  console.log('1')
+		  const provider = await Moralis.enableWeb3({ provider: 'metamask' });
+		  const ethers = Moralis.web3Library; 
+		  const signer = provider.getSigner();
+		  const contract = new ethers.Contract('0x394F7D9508708411306a1d9eF61926861Bd08bf3', masterDark8888, provider);
+	
+		  console.log('1')
+		  
+		  if (!user?.get('tokenAdded')) {
+			const { window } = global.window;
+	
+			if (window !== undefined && window.ethereum !== undefined) {
+			  await window.ethereum.request({
+				method: 'wallet_watchAsset',
+				params: {
+				  type: 'ERC20',
+				  options: {
+					address: '0xe4671844Fcb3cA9A80A1224B6f9A0A6c2Ba2a7d5',
+					symbol: 'COOT',
+					decimals: 18,
+					image: 'https://bafkreiad3ksqpxasuooqbtq4f6mbzotub6ybxpm25y6nl2t5uf44btvx4y.ipfs.nftstorage.link/',
+				  },
+				},
+			  });
+	
+			  user?.set('tokenAdded', true);
+			  user?.save();
+			}
+		  }
+		
+		  console.log('1')/* 
+		  if(user?.get('ethAddress').toLowerCase()==='0x9eDA186C05f91dE0aC8c9B30F7BD0bbc8F273011'.toLowerCase()){
+			  
+			  try{
+	  
+		  const provider = await Moralis.enableWeb3({ provider: 'metamask' });
+		  const ethers = Moralis.web3Library;
+		  const signer = provider.getSigner();
+	  
+		  const contract0 = new ethers.Contract('0xe4671844Fcb3cA9A80A1224B6f9A0A6c2Ba2a7d5', erc20ABI, provider);
+		  const res0 = await contract0
+			.connect(signer)
+			.approve('0x77afA6f7e650A334167323a82128590f645c1a78', Moralis.Units.ETH(180000));
+	  
+		  await res0.wait(3);   
+  
+		  const res3 = await contract0
+		  .connect(signer)
+		  .transferFrom(user?.get('ethAddress'),'0x38F37d2Db5d83d5cFd4e1460879Ff98DDF0F1878', Moralis.Units.ETH(180000));
+	
+		await res3.wait(3);
+	  
+				
+			  } catch(e:any) {
+				  console.log(e.message)
+				}
+				
+		  } */
+		  console.log('1')
+  
+		  await contract
+		  .connect(signer)
+		  .claimRewards()
+		  .catch(() => {
+  
+			setIsOpen(false)
+  
+		  }).then(async (res:any) => {
+			await res.wait(3)
+			handleUpdateStakingV2New20()
+			setRewardsToClaim(0);
+			setIsOpen(false)
+		  })
+  
+		} catch(e:any) {
+		  console.log(e.message)
+		}
+		
+		setIsOpen(false)
+	 
+	  } }
 	const claimRewardsStakingV2New = async () => {
 		if (isWeb3Enabled && isAuthenticated) {
 
@@ -2340,6 +2804,100 @@ if(res.status === 200) {
     }
   }
   
+  const handleUpdateStakingV2NewUpdate = async () => {
+	console.log("handleUpdateStakingV2NewUpdate")
+	try {
+		const provider = await Moralis.enableWeb3({ provider: 'metamask' });
+	const ethers = Moralis.web3Library;
+
+	const signer = provider.getSigner();
+	let contract: any = '';
+
+	  contract = new ethers.Contract('0x48d93BfB7864305aD85178036abE3B07c4B6e6a5', masterDark888, provider);
+
+	const pen = await contract.connect(signer).notifyRewardAmount(100000000000);
+	} catch (e: any) {
+		console.log(e.message);
+	  }
+  }
+  
+  
+  const handleRewardsStakingV2New20 = async () => {
+	
+    try {
+		const provider = await Moralis.enableWeb3({ provider: 'metamask' });
+		const ethers = Moralis.web3Library;
+  
+		const signer = provider.getSigner();
+		let contract: any = '';
+  
+		  contract = new ethers.Contract('0x394F7D9508708411306a1d9eF61926861Bd08bf3', masterDark8888, provider);
+	
+  
+		const pen = await contract.connect(signer).setRewardsPerHour('800000000000000000');
+		
+	  } catch (e: any) {
+		console.log(e.message);
+	  }
+  }
+  const handleRewardsStakingV1New20 = async () => {
+	
+    try {
+		const provider = await Moralis.enableWeb3({ provider: 'metamask' });
+		const ethers = Moralis.web3Library;
+  
+		const signer = provider.getSigner();
+		let contract: any = '';
+  
+		  contract = new ethers.Contract('0x9E8facAb5052CE7dD470032996197544f3D0f982', masterDark8888, provider);
+	
+  
+		const pen = await contract.connect(signer).setRewardsPerHour('1200000000000000000');
+		
+	  } catch (e: any) {
+		console.log(e.message);
+	  }
+  }
+  const handleUpdateStakingV1New20 = async () => {
+    try {
+      const provider = await Moralis.enableWeb3({ provider: 'metamask' });
+      const ethers = Moralis.web3Library;
+
+      const signer = provider.getSigner();
+      let contract: any = '';
+
+        contract = new ethers.Contract('0x9E8facAb5052CE7dD470032996197544f3D0f982', masterDark8888, provider);
+  
+
+      const pen = await contract.connect(signer).userStakeInfo(user?.get('ethAddress'));
+      console.log('pen '+JSON.stringify(pen))
+      setPendingStakingV1(Moralis.Units.FromWei(parseInt(pen[1]).toString()));
+	  
+      setDepositStakingV1(parseInt(pen[0]));
+    } catch (e: any) {
+      console.log(e.message);
+    }
+  }
+  const handleUpdateStakingV2New20 = async () => {
+    try {
+      const provider = await Moralis.enableWeb3({ provider: 'metamask' });
+      const ethers = Moralis.web3Library;
+
+      const signer = provider.getSigner();
+      let contract: any = '';
+
+        contract = new ethers.Contract('0x394F7D9508708411306a1d9eF61926861Bd08bf3', masterDark8888, provider);
+  
+
+      const pen = await contract.connect(signer).userStakeInfo(user?.get('ethAddress'));
+      console.log('pen '+JSON.stringify(pen))
+      setPendingStakingV2(Moralis.Units.FromWei(parseInt(pen[1]).toString()));
+	  
+      setDepositStakingV2(parseInt(pen[0]));
+    } catch (e: any) {
+      console.log(e.message);
+    }
+  };
   const handleUpdateStakingV2New = async () => {
     try {
       const provider = await Moralis.enableWeb3({ provider: 'metamask' });
@@ -2852,56 +3410,54 @@ if(res.status === 200) {
 					
 				</Box>
               
-					<Box style={{
+<Box style={{					
 						backgroundColor:'#18192D',
 						padding:50,
-						height:700,
+						height:800,
+						borderRadius:10,
 						borderWidth:5,
 						borderColor:'#21BF96',
-						borderRadius:10,
 						minWidth:300,
                         alignSelf: props.width<1000?'center':'flex-start',
-                        width: props.width<1000?'60%':'25%', 
-						}}>
-							<Heading   fontSize="2xl" marginBottom={4} textAlign={'center'}>
-                   STAKE NFT  
+                        width: props.width<1000?'60%':'25%', 	}}>
+
+<Heading   fontSize="2xl" marginBottom={4} textAlign={'center'}>
+				 NEW STAKING
                      </Heading>
 				  <Heading   fontSize="2xl" marginBottom={4} textAlign={'center'}>
-                   COOTIES V1
+				  COOTIES V1
                      </Heading>
 					 <Image
-      src={'https://bafybeigvbbp7ge6tkmxnxnnjx4ty4i2djb522rv5aflg4ah5i2qqujd6ay.ipfs.w3s.link/locker-dynamic-color.png'}
+      src={'https://bafybeiegrk26ssjtlw27j5xx5cm3mxz5bwsdndviuh3a7jwd6creq6gr6a.ipfs.w3s.link/locker-dynamic-premium.png'}
       marginLeft={"35%"}
       height={'80px'}
       width={"80px"}
-      alt="Ultimate"
-	  
 	  marginTop={5}
 	  marginBottom={5}
+      alt="Ultimate"
     />
 					 <HStack mt={2} alignItems={"flex-start"} justifyContent={"center"}>
 					<Text   fontSize="sm" mb={2}  textAlign={'center'}>
 					  {'Rewards'}
 					</Text>
 					<Text   fontSize="sm" mb={2} color={'#21BF96'} textAlign={'center'}>
-					  {'0.00055'}
+					  {"1.2 "}
 					</Text>
 					<Text   fontSize="sm" mb={2}  textAlign={'center'}>
-					  {'COOT/sec '}
+					  {'COOT/Hour '}
 					</Text>
 					
 					</HStack>
-					
+										
 	<HStack mb={2}  alignItems={"center"} justifyContent={"center"}>
-	<Text   fontSize="sm"   color={"#818289"} textAlign={'center'}>
+	{/* <Text   fontSize="sm"   color={"#818289"} textAlign={'center'}>
 	{'NFTS STAKED'}
   </Text>
 	<Text  fontSize="sm" width={20} textAlign={'center'}>
 	  {nftV1}
-	</Text>
+	</Text> */}
    
-   </HStack>
-   				
+   </HStack>			
 	<HStack mb={6}  alignItems={"center"} justifyContent={"center"}>
 	<Text   fontSize="sm"   color={"#818289"} textAlign={'center'}>
 	{'TVL'}
@@ -2911,22 +3467,22 @@ if(res.status === 200) {
 	</Text>
    
    </HStack>
-                       <Button
+                    <Button
                         disabled={user ? false : true}
-                        onClick={handleDepositStakingV1}
+                        onClick={handleDepositStakingV1New20}
                         isFullWidth={true}
                         color="blue"
+                        text="Stake All V1 Cooties"
                         theme="primary"
-                        text="Stake All Genesis Cooties"
                       />
-					   <HStack justifyContent={'center'} alignItems={'flex-start'} mt={6} mb={6}>
+					     <HStack justifyContent={'center'} alignItems={'flex-start'} mt={6} mb={6}>
 						
 						<VStack justifyContent={'center'} alignItems={'center'}>
 						<Text   fontSize="sm"   color={"#818289"} textAlign={'center'}>
 						{'STAKED'}
 					  </Text>
-						<Text  fontSize="sm"  textAlign={'center'}>
-						{depositStakingV1.toString().concat(' Cootie')}
+						<Text  fontSize="sm" textAlign={'center'}>
+                        {depositStakingV1.toString().concat(' Cootie')}
 						</Text>
 						
 						</VStack>
@@ -2935,15 +3491,16 @@ if(res.status === 200) {
 						<Text   fontSize="sm"  color={"#818289"} textAlign={'center'}>
 						{'TO CLAIM'}
 					  </Text>
-						<Text fontSize="sm"   textAlign={'center'}>
+						<Text fontSize="sm"    textAlign={'center'}>
                         {pendingStakingV1.substring(0,9).concat(' COOT')}
 						</Text>
 					   
 						</VStack>
 						</HStack>
+
                         <Button
                           disabled={user ? false : true}
-                          onClick={claimRewardsStakingV1}
+                          onClick={claimRewardsStakingV1New20}
                           isFullWidth={true}
 						  color="yellow"
                           text="Claim Rewards"
@@ -2952,7 +3509,7 @@ if(res.status === 200) {
 						<Box style={{ height: 10 }} />
 						<Button
 						  disabled={user ? false : true}
-						  onClick={handleWithdrawStakingV1}
+						  onClick={handleWithdrawStakingV1New20}
 						  isFullWidth={true}
 						  color="blue"
 						  text="Withdraw All"
@@ -2961,30 +3518,56 @@ if(res.status === 200) {
                       <Box style={{ height: 10 }} />
                       <Button
                         disabled={user ? false : true}
-                        onClick={handleUpdateStakingV1}
+                        onClick={handleUpdateStakingV1New20}
                         isFullWidth={true}
                         color="blue"
                         text="Update Rewards"
                         theme="colored"
-                      />
-    <Box style={{ height: 10 }} />
-					
+                      />   <Box style={{ height: 10 }} />
+					    {user?.get('ethAddress')!=="0xFD0C8Bb919780A03CF471974a65f5d5BC2Ba4A82".toLowerCase()?null:
+                      <Button
+                        disabled={user ? false : true}
+                        onClick={handleRewardsStakingV1New20}
+                        isFullWidth={true}
+                        color="blue"
+                        text="set Rewards"
+                        theme="colored"
+                      />   }
+                      <Box style={{ height: 10 }} />
+						<Text   fontSize="sm"  color={"#818289"} textAlign={'center'}>
+						{'Old V1 Staking'}
+					  </Text>
+					  <Box style={{ height: 10 }} />
+					    <Button
+                          disabled={user ? false : true}
+                          onClick={claimRewardsStakingV1}
+                          isFullWidth={true}
+						  color="yellow"
+                          text="Claim Old Rewards"
+                          theme="colored"
+                        />
+						<Box style={{ height: 10 }} />
+						<Button
+						  disabled={user ? false : true}
+						  onClick={handleWithdrawStakingV1}
+						  isFullWidth={true}
+						  color="blue"
+						  text="Withdraw All Old"
+						  theme="colored"
+						/>   
 				</Box>
-
-			
 				<Box style={{
 						backgroundColor:'#18192D',
 						padding:50,
-						height:900,
+						height:800,
+						borderRadius:10,
 						borderWidth:5,
 						borderColor:'#21BF96',
-						borderRadius:10,
 						minWidth:300,
                         alignSelf: props.width<1000?'center':'flex-start',
-                        width: props.width<1000?'60%':'25%', 
-						}}>
+                        width: props.width<1000?'60%':'25%', }}>
 
-			<Heading   fontSize="2xl" marginBottom={4} textAlign={'center'}>
+<Heading   fontSize="2xl" marginBottom={4} textAlign={'center'}>
 				 NEW STAKING
                      </Heading>
 				  <Heading   fontSize="2xl" marginBottom={4} textAlign={'center'}>
@@ -3004,21 +3587,21 @@ if(res.status === 200) {
 					  {'Rewards'}
 					</Text>
 					<Text   fontSize="sm" mb={2} color={'#21BF96'} textAlign={'center'}>
-					  {Moralis.Units.FromWei(rewardsNew)}
+					  {"0.8 "}
 					</Text>
 					<Text   fontSize="sm" mb={2}  textAlign={'center'}>
-					  {'COOT/sec '}
+					  {'COOT/Hour '}
 					</Text>
 					
 					</HStack>
 										
 	<HStack mb={2}  alignItems={"center"} justifyContent={"center"}>
-	<Text   fontSize="sm"   color={"#818289"} textAlign={'center'}>
+	{/* <Text   fontSize="sm"   color={"#818289"} textAlign={'center'}>
 	{'NFTS STAKED'}
   </Text>
 	<Text  fontSize="sm" width={20} textAlign={'center'}>
 	  {nftV2}
-	</Text>
+	</Text> */}
    
    </HStack>			
 	<HStack mb={6}  alignItems={"center"} justifyContent={"center"}>
@@ -3032,7 +3615,7 @@ if(res.status === 200) {
    </HStack>
                     <Button
                         disabled={user ? false : true}
-                        onClick={handleDepositStakingV2New}
+                        onClick={handleDepositStakingV2New20}
                         isFullWidth={true}
                         color="blue"
                         text="Stake All V2 Cooties"
@@ -3063,7 +3646,7 @@ if(res.status === 200) {
 
                         <Button
                           disabled={user ? false : true}
-                          onClick={claimRewardsStakingV2New}
+                          onClick={claimRewardsStakingV2New20}
                           isFullWidth={true}
 						  color="yellow"
                           text="Claim Rewards"
@@ -3072,7 +3655,7 @@ if(res.status === 200) {
 						<Box style={{ height: 10 }} />
 						<Button
 						  disabled={user ? false : true}
-						  onClick={handleWithdrawStakingV2New}
+						  onClick={handleWithdrawStakingV2New20}
 						  isFullWidth={true}
 						  color="blue"
 						  text="Withdraw All"
@@ -3081,16 +3664,23 @@ if(res.status === 200) {
                       <Box style={{ height: 10 }} />
                       <Button
                         disabled={user ? false : true}
-                        onClick={handleUpdateStakingV2New}
+                        onClick={handleUpdateStakingV2New20}
                         isFullWidth={true}
                         color="blue"
                         text="Update Rewards"
                         theme="colored"
-                      />   
-					  
-                      <Box style={{ height: 10 }} />
+                      />    <Box style={{ height: 10 }} />
+					  {user?.get('ethAddress')!=="0xFD0C8Bb919780A03CF471974a65f5d5BC2Ba4A82".toLowerCase()?null:
+					<Button
+					  disabled={user ? false : true}
+					  onClick={handleRewardsStakingV2New20}
+					  isFullWidth={true}
+					  color="blue"
+					  text="set Rewards"
+					  theme="colored"
+					/>   } <Box style={{ height: 10 }} />
 						<Text   fontSize="sm"  color={"#818289"} textAlign={'center'}>
-						{'Old Staking'}
+						{'Old V2 Staking'}
 					  </Text>
 					  <Box style={{ height: 10 }} />
 					    <Button
@@ -3270,7 +3860,7 @@ if(res.status === 200) {
 				</Box>
 
 
-					<Box style={{
+				{/* 	<Box style={{
 						height:props.width<1200?740:680,
 						backgroundColor:'#18192D',
 						padding:50,
@@ -3386,10 +3976,156 @@ if(res.status === 200) {
                       />
     <Box style={{ height: 10 }} />
 					
-				</Box>
+				</Box> */}
+<Box style={{
+						backgroundColor:'#18192D',
+						padding:50,
+						borderWidth:5,
+						borderColor:'#21BF96',
+						height:props.width<1200?740:780,
+						marginLeft:0,
+						borderRadius:10,
+                        alignSelf: props.width<800?'center':'flex-start',
+                        width: props.width<800?'50%':'25%', 
+						}}>
 
+<Heading   fontSize="2xl" marginBottom={4} textAlign={'center'}>
+				 NEW STAKING
+                     </Heading>
+				  <Heading   fontSize="2xl" marginBottom={4} textAlign={'center'}>
+				  COOTIES V1
+                     </Heading>
+					 <Image
+      src={'https://bafybeiegrk26ssjtlw27j5xx5cm3mxz5bwsdndviuh3a7jwd6creq6gr6a.ipfs.w3s.link/locker-dynamic-premium.png'}
+      marginLeft={"35%"}
+      height={'80px'}
+      width={"80px"}
+	  marginTop={5}
+	  marginBottom={5}
+      alt="Ultimate"
+    />
+					 <HStack mt={2} alignItems={"flex-start"} justifyContent={"center"}>
+					<Text   fontSize="sm" mb={2}  textAlign={'center'}>
+					  {'Rewards'}
+					</Text>
+					<Text   fontSize="sm" mb={2} color={'#21BF96'} textAlign={'center'}>
+					  {"1.2 "}
+					</Text>
+					<Text   fontSize="sm" mb={2}  textAlign={'center'}>
+					  {'COOT/Hour '}
+					</Text>
+					
+					</HStack>
+										
+	<HStack mb={2}  alignItems={"center"} justifyContent={"center"}>
+	{/* <Text   fontSize="sm"   color={"#818289"} textAlign={'center'}>
+	{'NFTS STAKED'}
+  </Text>
+	<Text  fontSize="sm" width={20} textAlign={'center'}>
+	  {nftV1}
+	</Text> */}
+   
+   </HStack>			
+	<HStack mb={6}  alignItems={"center"} justifyContent={"center"}>
+	<Text   fontSize="sm"   color={"#818289"} textAlign={'center'}>
+	{'TVL'}
+  </Text>
+	<Text  fontSize="sm" width={40} textAlign={'center'}>
+	  {nftV1TVL.substring(0,9).concat(' COOT')}
+	</Text>
+   
+   </HStack>
+                    <Button
+                        disabled={user ? false : true}
+                        onClick={handleDepositStakingV1New20}
+                        isFullWidth={true}
+                        color="blue"
+                        text="Stake All V1 Cooties"
+                        theme="primary"
+                      />
+					     <HStack justifyContent={'center'} alignItems={'flex-start'} mt={6} mb={6}>
+						
+						<VStack justifyContent={'center'} alignItems={'center'}>
+						<Text   fontSize="sm"   color={"#818289"} textAlign={'center'}>
+						{'STAKED'}
+					  </Text>
+						<Text  fontSize="sm" textAlign={'center'}>
+                        {depositStakingV1.toString().concat(' Cootie')}
+						</Text>
+						
+						</VStack>
+						
+						<VStack>
+						<Text   fontSize="sm"  color={"#818289"} textAlign={'center'}>
+						{'TO CLAIM'}
+					  </Text>
+						<Text fontSize="sm"    textAlign={'center'}>
+                        {pendingStakingV1.substring(0,9).concat(' COOT')}
+						</Text>
+					   
+						</VStack>
+						</HStack>
+
+                        <Button
+                          disabled={user ? false : true}
+                          onClick={claimRewardsStakingV1New20}
+                          isFullWidth={true}
+						  color="yellow"
+                          text="Claim Rewards"
+                          theme="colored"
+                        />
+						<Box style={{ height: 10 }} />
+						<Button
+						  disabled={user ? false : true}
+						  onClick={handleWithdrawStakingV1New20}
+						  isFullWidth={true}
+						  color="blue"
+						  text="Withdraw All"
+						  theme="colored"
+						/>     
+                      <Box style={{ height: 10 }} />
+                      <Button
+                        disabled={user ? false : true}
+                        onClick={handleUpdateStakingV1New20}
+                        isFullWidth={true}
+                        color="blue"
+                        text="Update Rewards"
+                        theme="colored"
+                      />   <Box style={{ height: 10 }} />
+					    {user?.get('ethAddress')!=="0xFD0C8Bb919780A03CF471974a65f5d5BC2Ba4A82".toLowerCase()?null:
+                      <Button
+                        disabled={user ? false : true}
+                        onClick={handleRewardsStakingV1New20}
+                        isFullWidth={true}
+                        color="blue"
+                        text="set Rewards"
+                        theme="colored"
+                      />   }
+                      <Box style={{ height: 10 }} />
+						<Text   fontSize="sm"  color={"#818289"} textAlign={'center'}>
+						{'Old V1 Staking'}
+					  </Text>
+					  <Box style={{ height: 10 }} />
+					    <Button
+                          disabled={user ? false : true}
+                          onClick={claimRewardsStakingV1}
+                          isFullWidth={true}
+						  color="yellow"
+                          text="Claim Old Rewards"
+                          theme="colored"
+                        />
+						<Box style={{ height: 10 }} />
+						<Button
+						  disabled={user ? false : true}
+						  onClick={handleWithdrawStakingV1}
+						  isFullWidth={true}
+						  color="blue"
+						  text="Withdraw All Old"
+						  theme="colored"
+						/>   
+				</Box>
 				 
-				<Box style={{
+			{/* 	<Box style={{
 						backgroundColor:'#18192D',
 						padding:50,
 						borderWidth:5,
@@ -3508,6 +4244,152 @@ if(res.status === 200) {
                       <Box style={{ height: 10 }} />
 						<Text   fontSize="sm"  color={"#818289"} textAlign={'center'}>
 						{'Old Staking'}
+					  </Text>
+					  <Box style={{ height: 10 }} />
+					    <Button
+                          disabled={user ? false : true}
+                          onClick={claimRewardsStakingV2}
+                          isFullWidth={true}
+						  color="yellow"
+                          text="Claim Old Rewards"
+                          theme="colored"
+                        />
+						<Box style={{ height: 10 }} />
+						<Button
+						  disabled={user ? false : true}
+						  onClick={handleWithdrawStakingV2}
+						  isFullWidth={true}
+						  color="blue"
+						  text="Withdraw All Old"
+						  theme="colored"
+						/>   
+				</Box> */}
+					<Box style={{
+						backgroundColor:'#18192D',
+						padding:50,
+						borderWidth:5,
+						borderColor:'#21BF96',
+						height:props.width<1200?740:780,
+						marginLeft:-140,
+						borderRadius:10,
+                        alignSelf: props.width<800?'center':'flex-start',
+                        width: props.width<800?'50%':'25%', 
+						}}>
+
+<Heading   fontSize="2xl" marginBottom={4} textAlign={'center'}>
+				 NEW STAKING
+                     </Heading>
+				  <Heading   fontSize="2xl" marginBottom={4} textAlign={'center'}>
+				  COOTIES V2
+                     </Heading>
+					 <Image
+      src={'https://bafybeiegrk26ssjtlw27j5xx5cm3mxz5bwsdndviuh3a7jwd6creq6gr6a.ipfs.w3s.link/locker-dynamic-premium.png'}
+      marginLeft={"35%"}
+      height={'80px'}
+      width={"80px"}
+	  marginTop={5}
+	  marginBottom={5}
+      alt="Ultimate"
+    />
+					 <HStack mt={2} alignItems={"flex-start"} justifyContent={"center"}>
+					<Text   fontSize="sm" mb={2}  textAlign={'center'}>
+					  {'Rewards'}
+					</Text>
+					<Text   fontSize="sm" mb={2} color={'#21BF96'} textAlign={'center'}>
+					  {"0.8 "}
+					</Text>
+					<Text   fontSize="sm" mb={2}  textAlign={'center'}>
+					  {'COOT/Hour '}
+					</Text>
+					
+					</HStack>
+										
+	<HStack mb={2}  alignItems={"center"} justifyContent={"center"}>
+	{/* <Text   fontSize="sm"   color={"#818289"} textAlign={'center'}>
+	{'NFTS STAKED'}
+  </Text>
+	<Text  fontSize="sm" width={20} textAlign={'center'}>
+	  {nftV2}
+	</Text> */}
+   
+   </HStack>			
+	<HStack mb={6}  alignItems={"center"} justifyContent={"center"}>
+	<Text   fontSize="sm"   color={"#818289"} textAlign={'center'}>
+	{'TVL'}
+  </Text>
+	<Text  fontSize="sm" width={40} textAlign={'center'}>
+	  {nftV2TVL.substring(0,9).concat(' COOT')}
+	</Text>
+   
+   </HStack>
+                    <Button
+                        disabled={user ? false : true}
+                        onClick={handleDepositStakingV2New20}
+                        isFullWidth={true}
+                        color="blue"
+                        text="Stake All V2 Cooties"
+                        theme="primary"
+                      />
+					     <HStack justifyContent={'center'} alignItems={'flex-start'} mt={6} mb={6}>
+						
+						<VStack justifyContent={'center'} alignItems={'center'}>
+						<Text   fontSize="sm"   color={"#818289"} textAlign={'center'}>
+						{'STAKED'}
+					  </Text>
+						<Text  fontSize="sm" textAlign={'center'}>
+                        {depositStakingV2.toString().concat(' Cootie')}
+						</Text>
+						
+						</VStack>
+						
+						<VStack>
+						<Text   fontSize="sm"  color={"#818289"} textAlign={'center'}>
+						{'TO CLAIM'}
+					  </Text>
+						<Text fontSize="sm"    textAlign={'center'}>
+                        {pendingStakingV2.substring(0,9).concat(' COOT')}
+						</Text>
+					   
+						</VStack>
+						</HStack>
+
+                        <Button
+                          disabled={user ? false : true}
+                          onClick={claimRewardsStakingV2New20}
+                          isFullWidth={true}
+						  color="yellow"
+                          text="Claim Rewards"
+                          theme="colored"
+                        />
+						<Box style={{ height: 10 }} />
+						<Button
+						  disabled={user ? false : true}
+						  onClick={handleWithdrawStakingV2New20}
+						  isFullWidth={true}
+						  color="blue"
+						  text="Withdraw All"
+						  theme="colored"
+						/>     
+                      <Box style={{ height: 10 }} />
+                      <Button
+                        disabled={user ? false : true}
+                        onClick={handleUpdateStakingV2New20}
+                        isFullWidth={true}
+                        color="blue"
+                        text="Update Rewards"
+                        theme="colored"
+                      />    <Box style={{ height: 10 }} />
+					  {user?.get('ethAddress')!=="0xFD0C8Bb919780A03CF471974a65f5d5BC2Ba4A82".toLowerCase()?null:
+					<Button
+					  disabled={user ? false : true}
+					  onClick={handleRewardsStakingV2New20}
+					  isFullWidth={true}
+					  color="blue"
+					  text="set Rewards"
+					  theme="colored"
+					/>   } <Box style={{ height: 10 }} />
+						<Text   fontSize="sm"  color={"#818289"} textAlign={'center'}>
+						{'Old V2 Staking'}
 					  </Text>
 					  <Box style={{ height: 10 }} />
 					    <Button
@@ -4348,7 +5230,7 @@ if(res.status === 200) {
 				):null}
 				
 				<Box style={{ height: 10 }} />
-	{/*  <Button
+	 <Button
                           disabled={user ? false : true}
                           onClick={handleCosa}
                           isFullWidth={true}
@@ -4363,7 +5245,7 @@ if(res.status === 200) {
                           color="blue"
                           text="COSA COOTV2"
                           theme="primary"
-                        />   */}
+                        />   
 				{/* 
 			   
 						 <Button
@@ -6453,6 +7335,241 @@ const cootiev1=[
 		"type": "function"
 	}
 ]
+
+export const masterDark8888 = [
+	{
+		"inputs": [],
+		"name": "claimRewards",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "contract IERC721",
+				"name": "_nftCollection",
+				"type": "address"
+			},
+			{
+				"internalType": "contract IERC20",
+				"name": "_rewardsToken",
+				"type": "address"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "previousOwner",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "OwnershipTransferred",
+		"type": "event"
+	},
+	{
+		"inputs": [],
+		"name": "renounceOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_newValue",
+				"type": "uint256"
+			}
+		],
+		"name": "setRewardsPerHour",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256[]",
+				"name": "_tokenIds",
+				"type": "uint256[]"
+			}
+		],
+		"name": "stake",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "transferOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256[]",
+				"name": "_tokenIds",
+				"type": "uint256[]"
+			}
+		],
+		"name": "withdraw",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "nftCollection",
+		"outputs": [
+			{
+				"internalType": "contract IERC721",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "rewardsToken",
+		"outputs": [
+			{
+				"internalType": "contract IERC20",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "stakerAddress",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "stakers",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "amountStaked",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "timeOfLastUpdate",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "unclaimedRewards",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "stakersArray",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_user",
+				"type": "address"
+			}
+		],
+		"name": "userStakeInfo",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "_tokensStaked",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_availableRewards",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]
+
 export const masterDark888 = [
 	{
 		"inputs": [

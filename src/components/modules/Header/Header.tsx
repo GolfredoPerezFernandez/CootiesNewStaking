@@ -79,6 +79,7 @@ return
       
           <MoralisLogo />
           
+          <Box width={'50px'}/>
           {props.width > 900 ? (
           <NavBar />
           ):null}
@@ -93,8 +94,7 @@ return
             {props.width > 900 ? ( <HStack>
               <ConnectButton />
               <Box width={'20px'}/>
-              <Select 
-      onChange={handleChange} width={'200px'} placeholder={network}>
+              <Select onChange={handleChange} width={'200px'} placeholder={network}>
  {network!=='Flare Mainnet'?<option  value='Flare Mainnet'>Flare Mainnet</option>:null} 
  
  {network!=='Songbird'?<option  value='Songbird'>Songbird</option>:null} 
